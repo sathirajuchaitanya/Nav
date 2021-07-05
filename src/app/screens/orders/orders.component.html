@@ -1,0 +1,95 @@
+<div class="container w-100 mt-4 ">
+    <div class="row">
+      <div class="float-right">
+        <button class="btn btn-primary" (click) = "AddNewOrder()">New Order</button>
+    </div>
+    <table class="table table-striped" >
+      <thead>
+        <tr>
+          <th scope="col">Order Number</th>
+          <th scope="col" sortable="name">Customer buyer name</th>
+          <th scope="col" sortable="date">Order Due Date</th>
+          <th scope="col" sortable="name">Customer Address</th>
+          <th scope="col" sortable="name">Customer Phone</th>
+          <th scope="col" sortable="name">OrderTotal</th>
+          <th scope="col" sortable="name">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr
+          *ngFor="let data of orderDetails ; index as i">
+          <td scope="row">{{data.order.orderNumber}}</td>
+          <td>
+            {{ data.order.name}}
+          </td>
+  
+          <td>
+            {{ data.order.orderDueDate}}
+          </td>
+          <td>
+            {{ data.order.address}}
+          </td>
+          <td>
+            {{ data.order.phoneNumber}}
+          </td>
+          <td>
+            {{ data.order.totalOrder}}
+          </td>
+          <td>
+            <div class="d-flex ">
+              <div class="mr-3"> <button class = "btn btn-primary btn-sm" (click)="editOrder(data)">Edit</button></div>
+             <div class="ml-1"> <button  class="btn btn-danger btn-sm"
+              (click)="openDeleteConfirmation(i)">Delete</button></div>
+             
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <div *ngIf="orderDetails.length == 0">
+      No Orders Found
+    </div>
+  
+    
+  </div>
+</div>
+<ng-template #addOrder>
+    <div class="modal-header">
+        <div class="modal-title">
+          <h4  *ngIf="editPopUp">Edit order</h4>
+          <h4  *ngIf="!editPopUp">Add order</h4>
+        </div>
+        <button type="button" class="close" aria-label="Close" (click)="closeModal()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body  text-break">
+        <form [formGroup]="inputForm" #oderForm="ngForm" >
+            <div class="row">
+                <div class ="col-6"
+                    *ngFor="let variable of variableArray; let i = index; trackBy: trackByMethod">
+                    <div class="form-group">
+                        <label class="variables-header" *ngIf="variable?.id">
+                            {{variable?.displayName | titlecase}}
+                        </label><br />
+                                       
+                                            <input type={{variable.type}} class="form-control"
+                                                [formControl]="inputForm.controls[variable?.id]" >
+                                       
+                                        <div *ngIf="inputForm.controls[variable.id].invalid && (inputForm.controls[variable.id].touched || inputForm.controls[variable.id].dirty) || validateForm"
+                                            class="text-danger">
+                                            <span
+                                                *ngIf="inputForm.controls[variable.id].errors && inputForm.controls[variable.id].errors.required">
+                                                Required Field</span>
+                                        </div>
+                    </div>
+                </div>
+            </div>
+    </form>
+      </div>
+    <div class="modal-footer">
+    <button type="button" class="btn btn-success" (click)="submitOrder()">Confirm</button>
+    <button type="button" class="btn btn-outlet-dark" (click)="closeModal()">cancel</button>
+    </div>
+
+</ng-template>
